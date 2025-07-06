@@ -1,6 +1,6 @@
 # 💳 Oriem Benevolent Finance
 
-![CI](https://github.com/your-org/internet-banking-api/actions/workflows/ci.yml/badge.svg)  
+![CI](https://github.com/Ogwusearch/riem-Benevolent-Finance/actions/workflows/ci.yml/badge.svg)  
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)  
 ![Docs](https://img.shields.io/badge/docs-OpenAPI-blue)  
 ![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)  
@@ -272,8 +272,3 @@ MIT © \[Your Company / Name]
 * OAuth2 integration supported/planned.
 
 ---
-
-If you want sample code files or help with a microservice next, just ask!
-
-```
-```
