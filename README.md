@@ -1,274 +1,224 @@
-# 💳 Oriem Benevolent Finance
+# 🏦 ORiem Banking System – Backend API
 
-![CI](https://github.com/Ogwusearch/riem-Benevolent-Finance/actions/workflows/ci.yml/badge.svg)  
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)  
-![Docs](https://img.shields.io/badge/docs-OpenAPI-blue)  
-![Coverage](https://img.shields.io/badge/coverage-90%25-brightgreen)  
-![Code Quality](https://img.shields.io/badge/code%20quality-A-brightgreen)
+[![Python](https://img.shields.io/badge/python-3.10-blue)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Enterprise-green.svg)](https://fastapi.tiangolo.com/)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue.svg)](https://www.postgresql.org/)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/oriem-finance)
 
-A modern, secure, microservice-based **online banking system** built with **FastAPI**, designed for modularity, scalability, and developer-friendliness.
-
----
-
-## 📚 Table of Contents
-
-- [🚀 Features](#-features)  
-- [🧱 Architecture](#-architecture)  
-- [🛠️ Tech Stack](#️-tech-stack)  
-- [📁 Project Structure](#-project-structure)  
-- [⚡ Quick Start](#-quick-start)  
-- [🔧 Environment Variables](#-environment-variables)  
-- [🔐 Authentication](#-authentication)  
-- [📘 API Documentation](#-api-documentation)  
-- [🧪 Testing](#-testing)  
-- [🤝 Contributing](#-contributing)  
-- [📅 Changelog](#-changelog)  
-- [📃 License](#-license)  
-- [📸 Screenshots & Diagrams](#-screenshots--diagrams)  
-- [🔒 Security Notes](#-security-notes)
+> A secure, modular, and scalable backend API for digital banking services — inspired by enterprise architecture practices (e.g., JPMorgan Chase, Revolut, Monzo).
 
 ---
 
-## 🚀 Features
+## 🔍 Overview
 
-- 🔐 **Authentication:** JWT tokens, OAuth2 ready  
-- 👤 **User Management:** Registration, login, KYC, profiles  
-- 🏦 **Account Lifecycle:** Open, close, balance inquiries  
-- 💸 **Transactions:** Internal/external transfers with audit logs  
-- 💳 **Card Services:** Card issuance, blocking, controls  
-- 🏛️ **Loans:** Application, approval, repayment tracking  
-- 🔔 **Notifications:** Email, SMS, push alerts  
-- 🧾 **Audit Logging:** Full compliance tracking  
-- ⚙️ **Admin Dashboard:** Role-based access control APIs  
-- 📘 **OpenAPI Spec:** Modular, auto-generated docs
+ORiem Banking System is a web-based digital banking backend, built with security, compliance, and performance in mind. It supports:
+
+- Role-based access control (RBAC)
+- Secure banking transactions
+- Scalable account and user management
+- Integration-ready with React / mobile clients
+- Logging, auditing, and future-proof modular architecture
 
 ---
 
 ## 🧱 Architecture
 
-```text
-Client Apps (Web/Mobile)
-        ↓
-   [API Gateway]
-        ↓
- ┌────────┬────────┬────────┬────────┐
- │ Auth   │ Users  │ Accounts │ Cards │
- └────────┴────────┴────────┴────────┘
-       ↓          ↓           ↓
-   Payments   Transactions   Loans
-       ↓          ↓           ↓
- Notifications   Audit     Admin
-````
-
-**Microservices communicate via REST and optionally Kafka events.**
+- **Framework:** FastAPI (async REST API)
+- **ORM:** SQLAlchemy with PostgreSQL
+- **Auth:** JWT + OAuth2 Password Flow
+- **Security:** Bcrypt password hashing, input validation, role enforcement
+- **Layered Architecture:** API ⟶ Services ⟶ DAO ⟶ Database
 
 ---
 
-## 🛠️ Tech Stack
+## 🗂️ Project Structure
 
-| Layer          | Technology                      |
-| -------------- | ------------------------------- |
-| API Gateway    | FastAPI + Traefik / Kong        |
-| Microservices  | FastAPI (Python)                |
-| Authentication | JWT, OAuth2                     |
-| Databases      | PostgreSQL, Redis               |
-| Messaging      | Kafka (optional)                |
-| Documentation  | OpenAPI 3.0 (Redoc, Swagger UI) |
-| CI/CD          | GitHub Actions                  |
-
----
-
-## 📁 Project Structure
-
-```text
-internet-banking-api/
-├── gateway/             # API gateway (routing, auth, rate limiting)
-├── services/            # Domain microservices
-│   ├── auth/
-│   ├── users/
-│   ├── accounts/
-│   ├── transactions/
-│   ├── payments/
-│   ├── cards/
-│   ├── loans/
-│   ├── notifications/
-│   ├── audit/
-│   └── admin/
-├── openapi/             # Modular OpenAPI spec files
-│   ├── openapi.yaml
-│   ├── paths/
-│   └── components/
-├── k8s/                 # Kubernetes manifests
-├── docs/                # Docs, images, Postman collections
-└── .github/             # GitHub Actions workflows
+```
+oriem_backend/
+├── app/
+│   ├── auth/               # JWT, dependencies, guards
+│   ├── config.py           # Env + global settings
+│   ├── constants.py        # Enum values, roles
+│   ├── database.py         # DB engine and session
+│   ├── main.py             # Entrypoint (Uvicorn)
+│   ├── middleware/         # CORS, logging
+│   ├── models/             # SQLAlchemy models
+│   ├── routers/            # API routes (modular)
+│   ├── schemas/            # Pydantic DTOs
+│   ├── services/           # Business logic layer
+│   ├── storage/            # Data access abstraction
+│   ├── utils/              # Password, email, validation
+│   └── logs/               # Audit & system logs
+├── alembic/                # DB migrations
+├── tests/                  # Pytest coverage
+├── .env                    # Environment variables
+├── docker-compose.yml
+├── requirements.txt
+├── README.md
+└── run.sh
 ```
 
 ---
 
-## ⚡ Quick Start
+## 📌 Key Features
+
+- 🔐 **User Authentication**: Signup, login, password hashing, access token
+- 👥 **RBAC**: Define roles for Customer, Teller, Officer, Admin
+- 💳 **Accounts**: Open, close, update customer accounts
+- 💰 **Transactions**: Deposit, withdraw, transfer (with atomic operations)
+- 📜 **Audit Logging**: System logs for sensitive actions
+- 📩 **Email Notifications**: For login alerts, transaction confirmations (optional)
+- 📄 **Swagger/OpenAPI**: Auto-generated API docs
+- 🧪 **Testing Suite**: Pytest & test clients
+
+---
+
+## ⚙️ Environment Configuration
+
+Create a `.env` file:
+
+```env
+DATABASE_URL=postgresql://postgres:password@localhost:5432/oriemdb
+SECRET_KEY=supersecurekeyhere
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+ALGORITHM=HS256
+```
+
+---
+
+## 🚀 Getting Started
 
 ```bash
-# Clone the repo
-git clone https://github.com/your-org/internet-banking-api.git
-cd internet-banking-api
+# Step 1: Clone the repo
+git clone https://github.com/oriem-capital/oriem-backend.git
+cd oriem-backend
 
-# Copy example env file and edit
-cp .env.example .env
-# (edit .env to set DB credentials, secrets, etc.)
+# Step 2: Set up environment
+python -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
 
-# Run API Gateway (development mode)
-uvicorn gateway.main:app --reload --port 8000
-```
+# Step 3: Initialize DB
+alembic upgrade head
 
-Visit API docs at:
-
-* Swagger UI: `http://localhost:8000/docs`
-* Redoc: `http://localhost:8000/redoc`
-
-### Example: Login and Get Token
-
-```bash
-curl -X POST "http://localhost:8000/auth/login" \
--H "Content-Type: application/json" \
--d '{"email":"user@example.com","password":"securepassword"}'
+# Step 4: Run the app
+uvicorn app.main:app --reload
 ```
 
 ---
 
-## 🔧 Environment Variables
-
-| Variable                      | Description                            | Example                               |
-| ----------------------------- | -------------------------------------- | ------------------------------------- |
-| `DATABASE_URL`                | PostgreSQL connection string           | `postgresql://user:pass@localhost/db` |
-| `REDIS_URL`                   | Redis URL for caching & sessions       | `redis://localhost:6379`              |
-| `JWT_SECRET_KEY`              | Secret key to sign JWT tokens          | `supersecretkey`                      |
-| `JWT_ALGORITHM`               | Algorithm for JWT signing (e.g. HS256) | `HS256`                               |
-| `ACCESS_TOKEN_EXPIRE_MINUTES` | Token expiry time in minutes           | `30`                                  |
-| `EMAIL_SMTP_SERVER`           | SMTP server for notification emails    | `smtp.mailtrap.io`                    |
-| `EMAIL_FROM`                  | Default email sender address           | `noreply@bank.com`                    |
-| ...                           | Other service-specific configs         |                                       |
-
-> Keep `.env` out of public repos for security.
-
----
-
-## 🔐 Authentication
-
-* Uses **JWT Bearer tokens** for protected endpoints.
-* Obtain token via `/auth/login`.
-* Include token in headers:
-
-```http
-Authorization: Bearer <access_token>
-```
-
-* OAuth2 flows support planned/optional.
-
----
-
-## 📘 API Documentation
-
-Modular OpenAPI spec layout:
-
-```text
-/openapi/
-├── openapi.yaml          # Root spec file
-├── paths/
-│   ├── auth.yaml
-│   ├── users.yaml
-│   ├── accounts.yaml
-│   └── ...
-└── components/
-    ├── schemas.yaml
-    ├── security.yaml
-    └── responses.yaml
-```
-
-Preview docs locally with:
-
-```bash
-npm install -g redoc-cli
-redoc-cli serve openapi/openapi.yaml
-```
-
----
-
-## 🧪 Testing
-
-* Use Postman collection in `/docs/postman_collection.json`.
-* Run Pytest inside each service folder:
+## 🧪 Run Tests
 
 ```bash
 pytest tests/
 ```
 
-* CI pipelines automate tests on PRs.
+---
+
+## 🧾 API Documentation
+
+📍 Swagger UI: [http://localhost:8000/docs](http://localhost:8000/docs)  
+📍 Redoc UI: [http://localhost:8000/redoc](http://localhost:8000/redoc)
 
 ---
 
-## 🤝 Contributing
+## 🔐 Security Measures
 
-See [`CONTRIBUTING.md`](./CONTRIBUTING.md) for guidelines.
-
-Summary:
-
-1. Fork the repo
-2. Create feature branch (`git checkout -b feature/your-feature`)
-3. Write conventional commit messages
-4. Run tests locally
-5. Submit Pull Request
+- ✅ JWT Token-based access (Authorization: `Bearer <token>`)
+- ✅ Strong password hashing (Bcrypt)
+- ✅ Rate limiting (via middleware)
+- ✅ Role access control via dependency injection
+- ✅ SQL injection prevention via ORM
+- ✅ Audit trails (who did what, when)
 
 ---
 
-## 📅 Changelog
+## 🐳 Docker Support
 
-See [`CHANGELOG.md`](./CHANGELOG.md) for version history.
-
----
-
-## 📃 License
-
-MIT © \[Your Company / Name]
-
----
-
-## 📸 Screenshots & Diagrams
-
-### Architecture Diagram
-
-```ascii
-+------------+       +-------------+       +---------------+
-| Web/Mobile | <---> | API Gateway | <---> | Microservices |
-+------------+       +-------------+       +---------------+
-                                      /      |       \       
-                             +-------+       |        +-------+
-                             |               |                |
-                        +--------+      +---------+      +--------+
-                        | Auth   |      | Accounts|      | Loans  |
-                        +--------+      +---------+      +--------+
+```bash
+docker-compose up --build
 ```
 
-### Sample API Response
+> Optional: Set PostgreSQL or MySQL in `.env` before deploying
 
-```json
-{
-  "account_id": "12345",
-  "owner": "user@example.com",
-  "balance": 10234.56,
-  "currency": "USD",
-  "status": "active"
-}
+---
+
+## 📊 Core API Endpoints
+
+### 👥 Authentication
+
+| Method | Endpoint         | Description         |
+|--------|------------------|---------------------|
+| POST   | `/auth/signup`   | Register a new user |
+| POST   | `/auth/login`    | Login and get token |
+| GET    | `/users/me`      | Fetch current user  |
+
+### 💼 Accounts
+
+| Method | Endpoint                  | Description          |
+|--------|---------------------------|----------------------|
+| POST   | `/accounts/create`        | Open new account     |
+| PUT    | `/accounts/{id}/update`   | Modify account       |
+| DELETE | `/accounts/{id}/close`    | Close account        |
+
+### 💸 Transactions
+
+| Method | Endpoint                    | Description              |
+|--------|-----------------------------|--------------------------|
+| POST   | `/transactions/deposit`     | Deposit funds            |
+| POST   | `/transactions/withdraw`    | Withdraw funds           |
+| POST   | `/transactions/transfer`    | Transfer between accounts|
+| GET    | `/transactions/account/{id}`| Get account history      |
+
+---
+
+## 📦 Tech Stack
+
+| Component     | Tool                      |
+|---------------|---------------------------|
+| Backend       | FastAPI + SQLAlchemy      |
+| DB            | PostgreSQL / MySQL        |
+| Auth          | JWT + OAuth2              |
+| Migration     | Alembic                   |
+| Dev Tools     | Uvicorn, Pydantic, Pytest |
+| Deployment    | Docker, Docker Compose    |
+
+---
+
+## 🔧 Contribution
+
+```bash
+# Format code
+black app/
+# Run linting
+flake8 app/
 ```
 
----
-
-## 🔒 Security Notes
-
-* Passwords hashed securely with bcrypt or Argon2.
-* JWT tokens signed with strong secret keys.
-* HTTPS enforced in production.
-* Rate limiting and IP blacklisting via API Gateway (planned).
-* Audit logs capture user/admin actions for compliance.
-* OAuth2 integration supported/planned.
+Pull requests welcome! 🙌
 
 ---
+
+## 📄 License
+
+This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.
+
+---
+
+## 🌐 Frontend Project
+
+Want the full frontend (React/Vite) integration?
+
+➡️ [ORIEM CAPITAL FRONTEND](https://github.com/oriem-capital/frontend)  
+Built with React, Axios, AuthContext, and Role-based UI.
+
+---
+
+## 🤝 Contact
+
+Built by the **ORiem Engineering Team**  
+📫 Contact: team@oriemfinance.com  
+🔗 [www.oriemfinance.com](https://www.oriemfinance.com)
+
+---
+
+> Let me know if you want the same version exported to PDF, or need a `README.md` for the React frontend too!
